@@ -66,7 +66,11 @@ MonoBehaviour:
   syncDirection: 0
   syncMode: 0
   syncInterval: 0
-  m_VehiclePrefab: {fileID: 951715699103797895, guid: f781510f2c09ec4439092264f21d6c06, type: 3}
+  m_VehiclePrefab:
+  - {fileID: 951715699103797895, guid: f781510f2c09ec4439092264f21d6c06, type: 3}
+  - {fileID: 951715699103797895, guid: 041747aaa27e3194f92719f22d499a92, type: 3}
+  m_SpawnSpace: 2
+  m_PlayerHUD: {fileID: 0}
 --- !u!114 &-2400326977374934034
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -79,4 +83,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 485f6dd8935f5dc4ca52d83e2f696904, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_TargetVehicle: {fileID: 0}
+  m_MouseSensivity: 2

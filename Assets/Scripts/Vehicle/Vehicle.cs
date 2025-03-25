@@ -1,8 +1,13 @@
 ﻿using UnityEngine;
-using Mirror;
+
+public enum VehicleType
+{
+    Ship,
+    Tank
+};
 
 [RequireComponent(typeof(Rigidbody2D))]
-public class Vehicle : NetworkBehaviour
+public class Vehicle : Destructible
 {
     /// <summary>
     /// Масса для автоматической установки у ригида.
@@ -19,7 +24,12 @@ public class Vehicle : NetworkBehaviour
     [SerializeField] private float m_MaxLinearVelocity;
     [SerializeField] private float m_MaxAngularVelocity;
 
+    [SerializeField] private VehicleTurret m_Turret;
+
     private Rigidbody2D m_Rigid;
+
+    [SerializeField] private VehicleType m_VehicleType;
+    public VehicleType Type => m_VehicleType;
 
     #region Public API
 
@@ -36,17 +46,17 @@ public class Vehicle : NetworkBehaviour
     private void Start()
     {
         m_Rigid = GetComponent<Rigidbody2D>();
-        m_Rigid.mass = m_Mass;
 
+        if (m_Rigid == null) return;
+
+        m_Rigid.mass = m_Mass;
         m_Rigid.inertia = 1;
     }
 
     private void FixedUpdate()
     {
         if (authority || netIdentity.connectionToClient == null)
-        {
             UpdateRigidBody();
-        }
     }
 
     #endregion
@@ -56,9 +66,18 @@ public class Vehicle : NetworkBehaviour
     /// </summary>
     private void UpdateRigidBody()
     {
+        if (m_Rigid == null) return;
+
         m_Rigid.AddForce(ThrustControl * m_Thrust * transform.up * Time.fixedDeltaTime, ForceMode2D.Force);
         m_Rigid.AddForce(-m_Rigid.linearVelocity * (m_Thrust / m_MaxLinearVelocity) * Time.fixedDeltaTime, ForceMode2D.Force);
         m_Rigid.AddTorque(TorqueControl * m_Mobility * Time.fixedDeltaTime, ForceMode2D.Force);
         m_Rigid.AddTorque(-m_Rigid.angularVelocity * (m_Mobility / m_MaxAngularVelocity) * Time.fixedDeltaTime, ForceMode2D.Force);
+    }
+
+    // Public Method
+    public void Fire(int index)
+    {
+        if (m_Turret != null)
+            m_Turret.CmdFire(index);
     }
 }
